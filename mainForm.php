@@ -45,14 +45,23 @@
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active m-3" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div class="container mt-5">
-                <div class="card">
-                    <div class="card-header nav justify-content-between">
-                        <h5 class="mt-2">Inventory</h5>
+            <!-- ======= Hero Section ======= -->
+            <section id="hero" class="d-flex align-items-center">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
+                            <h1 class="text-dark">Inventory Management System in PHP</h1>
+                            <h2 class="text-dark">Activity in Systems Integration & Architecture 2</h2>
+                        </div>
+                        <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
+                            <img src="./dcsa.png" class="img-fluid animated" alt="">
+                        </div>
                     </div>
                 </div>
-            </div>
+
+            </section><!-- End Hero -->
         </div>
+        <!-- CUSTOMERS LIST -->
         <div class="tab-pane m-3" id="customers" role="tabpanel" aria-labelledby="profile-tab">
             <div class="container mt-5">
                 <div class="card">
@@ -63,7 +72,7 @@
                             Add Customers
                         </button>
 
-                        <!--  -->
+                        <!-- Modal Form for Updating customers  -->
                         <div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
                                 <div class="modal-content">
@@ -80,7 +89,79 @@
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                             Close
                                         </button>
-                                        <button type="button" class="btn btn-primary">Update</button>
+                                        <button type="button" class="btn btn-primary">Add Customer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            const myModal = new bootstrap.Modal(
+                                document.getElementById("modalId"),
+                                options,
+                            );
+                        </script>
+                        <!-- End of Modal -->
+                    </div>
+                    <!-- Start of table -->
+                    <div class="container mt-2">
+                        <table class="table text-center table-bordered ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Address</th>
+                                    <th>Mobile No.</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <a href="" class="btn btn-success ">Update</a>
+                                        <a href="" class="btn btn-danger ">Update</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- End of table -->
+                </div>
+            </div>
+        </div>
+        <!-- PRODUCTS LIST -->
+        <div class="tab-pane m-3" id="products" role="tabpanel" aria-labelledby="messages-tab">
+            <div class="container mt-5">
+                <div class="card">
+                    <div class="card-header nav justify-content-between">
+                        <h5 class="mt-2">Products List</h5>
+                        <!-- Modal trigger button -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalId1">
+                            Add Products
+                        </button>
+
+                        <!-- Modal Form for Updating products  -->
+                        <div class="modal fade" id="modalId1" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            Add Products
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Hello World
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button type="button" class="btn btn-primary">Add Product</button>
                                     </div>
                                 </div>
                             </div>
@@ -88,23 +169,40 @@
 
                         <!-- Optional: Place to the bottom of scripts -->
                         <script>
-                            const myModal = new bootstrap.Modal(
-                                document.getElementById("modalId"),
+                            const myModal1 = new bootstrap.Modal(
+                                document.getElementById("modalId1"),
                                 options,
                             );
                         </script>
-
+                        <!-- End of modal -->
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane m-3" id="products" role="tabpanel" aria-labelledby="messages-tab">
-            <div class="container mt-5">
-                <div class="card">
-                    <div class="card-header nav justify-content-between">
-                        <h5 class="mt-2">Products List</h5>
-                        <button class="btn btn-primary">Add Product</button>
+                    <!-- Start of table -->
+                    <div class="container mt-2">
+                        <table class="table text-center table-bordered ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product name</th>
+                                    <th>Product description</th>
+                                    <th>Product quantity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <a href="" class="btn btn-success ">Update</a>
+                                        <a href="" class="btn btn-danger ">Update</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+                    <!-- End of table -->
                 </div>
             </div>
         </div>
@@ -113,8 +211,70 @@
                 <div class="card">
                     <div class="card-header nav justify-content-between">
                         <h5 class="mt-2">Manage Orders</h5>
-                        <button class="btn btn-primary">Add Order</button>
+                        <!-- Modal trigger button -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal2">
+                            Manage Orders
+                        </button>
+
+                        <!-- Modal Form for Updating products  -->
+                        <div class="modal fade" id="myModal2" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            Manage Orders
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Hello World
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button type="button" class="btn btn-primary">Add Order</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Optional: Place to the bottom of scripts -->
+                        <script>
+                            const myModal2 = new bootstrap.Modal(
+                                document.getElementById("myModal2"),
+                                options,
+                            );
+                        </script>
+                        <!-- End of modal -->
                     </div>
+                    <!-- Start of table -->
+                    <div class="container mt-2">
+                        <table class="table text-center table-bordered ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product</th>
+                                    <th>Total item</th>
+                                    <th>Customer</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <a href="" class="btn btn-success ">Update</a>
+                                        <a href="" class="btn btn-danger ">Update</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- End of table -->
                 </div>
             </div>
         </div>
@@ -124,19 +284,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-</body>
-
-</html>
-
-
-<html lang="en">
-
-<head>
-
-</head>
-
-<body>
-
 </body>
 
 </html>
