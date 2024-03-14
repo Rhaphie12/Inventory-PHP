@@ -1,0 +1,26 @@
+/* *Font family (poppins) */
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+:root {
+  --main-font-color: #fff;
+  --sub-font-color: #000;
+  --font-family: "Poppins", sans-serif;
+  --font-size: 16px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font: var(--font-size) var(--font-family);
+  /* border: 1px solid red; */
+}
+
+.maroon-link {
+  color: maroon !important;
+}
+
+.header-button {
+  display: flex;
+  justify-content: space-evenly;
+}
