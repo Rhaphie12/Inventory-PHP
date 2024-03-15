@@ -5,19 +5,68 @@
     <!-- Required meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Inventory in PHP</title>
     <link rel="stylesheet" href="./css/styles.css">
 
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-    <header class="nav justify-content-center bg-primary p-3">
+    <?php
+    require('config/connection.php');
+
+    if (isset($_POST['addCustomer'])) {
+        $Customer = $_POST['name'];
+        $Address = $_POST['address'];
+        $Contact = $_POST['mobileNumber'];
+
+        $insertSQL = "INSERT INTO customers (Customer_name, Address, Mobile_number) 
+        VALUES ('$Customer', '$Address', '$Contact')";
+
+        if ($connection->query($insertSQL) === TRUE) {
+            echo '
+            <script>
+                Swal.fire({
+                  text: "Added Customer Successfully!",
+                  icon: "success"
+                });
+            </script>
+            ';
+        } else {
+            echo "Error: " . $insertSQL . "<br>" . $connection->error;
+        }
+    }
+
+    if (isset($_POST['addProduct'])) {
+        $ProductID = $_POST['productID'];
+        $ProductName = $_POST['productName'];
+        $Quantity = $_POST['quantity'];
+
+        $insertSQL = "INSERT INTO products (product_ID, product_name, quantity) 
+        VALUES ('$ProductID', '$ProductName', '$Quantity')";
+
+        if ($connection->query($insertSQL) === TRUE) {
+            echo '
+            <script>
+                Swal.fire({
+                  text: "Added Product Successfully!",
+                  icon: "success"
+                });
+            </script>
+            ';
+        } else {
+            echo "Error: " . $insertSQL . "<br>" . $connection->error;
+        }
+    }
+    ?>
+    <header class="nav justify-content-center bg-maroon p-3">
         <div class=" card-header">
-            <h4 class="fw-bold text-white">Inventory in PHP</h4>
+            <h4 class="fw-bold text-white ">Inventory in PHP</h4>
         </div>
     </header>
+
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -35,11 +84,6 @@
                 Products
             </button>
         </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link maroon-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab" aria-controls="messages" aria-selected="false">
-                Orders
-            </button>
-        </li>
     </ul>
 
     <!-- Tab panes -->
@@ -50,11 +94,11 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
-                            <h1 class="text-dark">Inventory Management System in PHP</h1>
+                            <h1 class="text-dark">Simple Inventory System in HTML & PHP</h1>
                             <h2 class="text-dark">Activity in Systems Integration & Architecture 2</h2>
                         </div>
                         <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
-                            <img src="./dcsa.png" class="img-fluid animated" alt="">
+                            <img src="./undraw_Stock_prices_re_js33.png" class="img-fluid animated" alt="">
                         </div>
                     </div>
                 </div>
@@ -83,13 +127,23 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        Hello World
+                                        <form action="./mainForm.php" method="post">
+                                            <label for="name">Customer name</label>
+                                            <input type="text" name="name" id="name" class="form-control" required>
+
+                                            <label for="address">Address</label>
+                                            <input type="text" name="address" id="address" class="form-control" required>
+
+                                            <label for="mobileNumber">Mobile Number</label>
+                                            <input type="text" name="mobileNumber" id="mobileNumber" class="form-control" required>
+
+                                            <input type="submit" value="Add Customer" name="addCustomer" class="btn btn-primary mt-2">
+                                        </form>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                             Close
                                         </button>
-                                        <button type="button" class="btn btn-primary">Add Customer</button>
                                     </div>
                                 </div>
                             </div>
@@ -104,6 +158,12 @@
                         <!-- End of Modal -->
                     </div>
                     <!-- Start of table -->
+                    <?php
+                    require_once('config/connection.php');
+
+                    $query = "SELECT * FROM customers";
+                    $result = mysqli_query($connection, $query);
+                    ?>
                     <div class="container mt-2">
                         <table class="table text-center table-bordered ">
                             <thead class="table-dark">
@@ -116,16 +176,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <a href="" class="btn btn-success ">Update</a>
-                                        <a href="" class="btn btn-danger ">Update</a>
-                                    </td>
-                                </tr>
+                                <?php
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "
+                                        <tr>
+                                            <td>" . $row["ID"] . "</td>
+                                            <td>" . $row["Customer_name"] . "</td>
+                                            <td>" . $row["Address"] . "</td>
+                                            <td>" . $row["Mobile_number"] . "</td>
+                                            <td>
+                                                <a href='' class='btn btn-success'>Update</a>
+                                               <a href='./delete.php?deleteID=" . $row["ID"] . "'class='btn btn-danger'>Delete</a>
+                                            </td>
+                                        </tr>
+                                        ";
+                                    }
+                                } else {
+                                    echo "
+                                        <tr>
+                                            <td colspan='5'>No results found</td>
+                                        </tr>";
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -133,6 +206,7 @@
                 </div>
             </div>
         </div>
+
         <!-- PRODUCTS LIST -->
         <div class="tab-pane m-3" id="products" role="tabpanel" aria-labelledby="messages-tab">
             <div class="container mt-5">
@@ -155,13 +229,23 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        Hello World
+                                        <form action="./mainForm.php" method="post">
+                                            <label for="productID">Product ID</label>
+                                            <input type="text" name="productID" id="productID" class="form-control" required>
+
+                                            <label for="productName">Product name</label>
+                                            <input type="text" name="productName" id="productName" class="form-control" required>
+
+                                            <label for="quantity">Quantity</label>
+                                            <input type="text" name="quantity" id="quantity" class="form-control" required>
+
+                                            <input type="submit" value="Add Product" name="addProduct" class="btn btn-primary mt-2">
+                                        </form>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                             Close
                                         </button>
-                                        <button type="button" class="btn btn-primary">Add Product</button>
                                     </div>
                                 </div>
                             </div>
@@ -177,100 +261,45 @@
                         <!-- End of modal -->
                     </div>
                     <!-- Start of table -->
+                    <?php
+                    require_once('config/connection.php');
+
+                    $query = "SELECT * FROM products";
+                    $results = mysqli_query($connection, $query);
+                    ?>
                     <div class="container mt-2">
                         <table class="table text-center table-bordered ">
                             <thead class="table-dark">
                                 <tr>
                                     <th>ID</th>
                                     <th>Product name</th>
-                                    <th>Product description</th>
                                     <th>Product quantity</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <a href="" class="btn btn-success ">Update</a>
-                                        <a href="" class="btn btn-danger ">Update</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- End of table -->
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane m-3" id="orders" role="tabpanel" aria-labelledby="messages-tab">
-            <div class="container mt-5">
-                <div class="card">
-                    <div class="card-header nav justify-content-between">
-                        <h5 class="mt-2">Manage Orders</h5>
-                        <!-- Modal trigger button -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal2">
-                            Manage Orders
-                        </button>
-
-                        <!-- Modal Form for Updating products  -->
-                        <div class="modal fade" id="myModal2" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modalTitleId">
-                                            Manage Orders
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Hello World
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                            Close
-                                        </button>
-                                        <button type="button" class="btn btn-primary">Add Order</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Optional: Place to the bottom of scripts -->
-                        <script>
-                            const myModal2 = new bootstrap.Modal(
-                                document.getElementById("myModal2"),
-                                options,
-                            );
-                        </script>
-                        <!-- End of modal -->
-                    </div>
-                    <!-- Start of table -->
-                    <div class="container mt-2">
-                        <table class="table text-center table-bordered ">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Product</th>
-                                    <th>Total item</th>
-                                    <th>Customer</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <a href="" class="btn btn-success ">Update</a>
-                                        <a href="" class="btn btn-danger ">Update</a>
-                                    </td>
-                                </tr>
+                                <?php
+                                if ($results->num_rows > 0) {
+                                    while ($row = $results->fetch_assoc()) {
+                                        echo "
+                                        <tr>
+                                            <td>" . $row["product_ID"] . "</td>
+                                            <td>" . $row["product_name"] . "</td>
+                                            <td>" . $row["quantity"] . "</td>
+                                            <td>
+                                                <a href='' class='btn btn-success'>Update</a>
+                                               <a href='./delete_products.php?deleteID=" . $row["product_ID"] . "'class='btn btn-danger'>Delete</a>
+                                            </td>
+                                        </tr>
+                                        ";
+                                    }
+                                } else {
+                                    echo "
+                                        <tr>
+                                            <td colspan='5'>No results found</td>
+                                        </tr>";
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -279,7 +308,6 @@
             </div>
         </div>
     </div>
-
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 

@@ -20,6 +20,10 @@
   color: maroon !important;
 }
 
+.bg-maroon {
+  background-color: maroon;
+}
+
 .header-button {
   display: flex;
   justify-content: space-evenly;
