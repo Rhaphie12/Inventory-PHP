@@ -17,6 +17,13 @@
     <?php
     require('config/connection.php');
 
+    $Customer = "";
+    $Address = "";
+    $Contact = "";
+    $Product_ID = "";
+    $ProductName = "";
+    $Quantity =  "";
+
     if (isset($_POST['addCustomer'])) {
         $Customer = $_POST['name'];
         $Address = $_POST['address'];
@@ -40,12 +47,12 @@
     }
 
     if (isset($_POST['addProduct'])) {
-        $ProductID = $_POST['productID'];
-        $ProductName = $_POST['productName'];
+        $Product_ID = $_POST['product_ID'];
+        $ProductName = $_POST['product_Name'];
         $Quantity = $_POST['quantity'];
 
         $insertSQL = "INSERT INTO products (product_ID, product_name, quantity) 
-        VALUES ('$ProductID', '$ProductName', '$Quantity')";
+        VALUES ('$Product_ID', '$ProductName', '$Quantity')";
 
         if ($connection->query($insertSQL) === TRUE) {
             echo '
@@ -58,6 +65,30 @@
             ';
         } else {
             echo "Error: " . $insertSQL . "<br>" . $connection->error;
+        }
+    }
+
+    if (isset($_POST['Search'])) {
+        // get values
+        $Product_ID = $_POST['product_ID'];
+
+        // new query
+        $query = "SELECT * FROM products WHERE product_ID = $Product_ID";
+
+        $search_Result = mysqli_query($connection, $query);
+
+        if ($search_Result) {
+            if (mysqli_num_rows($search_Result)) {
+                while ($row = mysqli_fetch_array($search_Result)) {
+                    $ProductID =  $row["product_ID"];
+                    $ProductName = $row["product_name"];
+                    $Quantity = $row["quantity"];
+                }
+            } else {
+                echo 'No Data For This Id';
+            }
+        } else {
+            echo 'Result Error';
         }
     }
     ?>
@@ -105,6 +136,7 @@
 
             </section><!-- End Hero -->
         </div>
+
         <!-- CUSTOMERS LIST -->
         <div class="tab-pane m-3" id="customers" role="tabpanel" aria-labelledby="profile-tab">
             <div class="container mt-5">
@@ -157,6 +189,7 @@
                         </script>
                         <!-- End of Modal -->
                     </div>
+
                     <!-- Start of table -->
                     <?php
                     require_once('config/connection.php');
@@ -164,7 +197,7 @@
                     $query = "SELECT * FROM customers";
                     $result = mysqli_query($connection, $query);
                     ?>
-                    <div class="container mt-2">
+                    <div class=" container mt-2">
                         <table class="table text-center table-bordered ">
                             <thead class="table-dark">
                                 <tr>
@@ -218,7 +251,7 @@
                             Add Products
                         </button>
 
-                        <!-- Modal Form for Updating products  -->
+                        <!-- Modal Form for Inserting products  -->
                         <div class="modal fade" id="modalId1" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
                                 <div class="modal-content">
@@ -229,15 +262,15 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="./mainForm.php" method="post">
-                                            <label for="productID">Product ID</label>
-                                            <input type="text" name="productID" id="productID" class="form-control" required>
+                                        <form action="./mainForm.php" method="POST">
+                                            <label for="product_ID">Product ID</label>
+                                            <input type="text" name="product_ID" id="product_ID" value="<?php echo $Product_ID; ?>" class="form-control" required>
 
-                                            <label for="productName">Product name</label>
-                                            <input type="text" name="productName" id="productName" class="form-control" required>
+                                            <label for="product_Name">Product name</label>
+                                            <input type="text" name="product_Name" id="product_Name" value="<?php echo $ProductName; ?>" class="form-control" required>
 
                                             <label for="quantity">Quantity</label>
-                                            <input type="text" name="quantity" id="quantity" class="form-control" required>
+                                            <input type="text" name="quantity" id="quantity" value="<?php echo $Quantity; ?>" class="form-control" required>
 
                                             <input type="submit" value="Add Product" name="addProduct" class="btn btn-primary mt-2">
                                         </form>
@@ -260,6 +293,20 @@
                         </script>
                         <!-- End of modal -->
                     </div>
+
+                    <!-- SEARCH FUNCTION -->
+                    <div class="container">
+                        <div class="sub-container m-2 justify-content-between nav">
+                            <div class="invisible"></div>
+                            <div class="">
+                                <form action="./mainForm.php" method="POST" class="d-sm-inline-flex gap-3"> <!-- Ensure the form method is POST -->
+                                    <input type="text" name="product_ID" class="form-control" placeholder="Search...">
+                                    <input type="submit" value="Search" name="Search" class="btn btn-primary">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END SEARCH FUNCTION -->
                     <!-- Start of table -->
                     <?php
                     require_once('config/connection.php');
