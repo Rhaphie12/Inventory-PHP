@@ -34,7 +34,7 @@
             echo '
             <script>
                 Swal.fire({
-                  text: "Update Product list Successfully!",
+                  text: "Update Customer list Successfully!",
                   icon: "success"
                 });
             </script>
