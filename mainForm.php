@@ -17,20 +17,23 @@
     <?php
     require('config/connection.php');
 
+    $ID = "";
     $Customer = "";
     $Address = "";
     $Contact = "";
     $Product_ID = "";
     $ProductName = "";
+    $Product_Description = "";
     $Quantity =  "";
 
     if (isset($_POST['addCustomer'])) {
+        $ID = $_POST['customer_ID'];
         $Customer = $_POST['name'];
         $Address = $_POST['address'];
         $Contact = $_POST['mobileNumber'];
 
-        $insertSQL = "INSERT INTO customers (Customer_name, Address, Mobile_number) 
-        VALUES ('$Customer', '$Address', '$Contact')";
+        $insertSQL = "INSERT INTO customers (customer_ID, Customer_name, Customer_address, Mobile_number) 
+        VALUES ('$ID', '$Customer', '$Address', '$Contact')";
 
         if ($connection->query($insertSQL) === TRUE) {
             echo '
@@ -49,10 +52,11 @@
     if (isset($_POST['addProduct'])) {
         $Product_ID = $_POST['product_ID'];
         $ProductName = $_POST['product_Name'];
+        $Product_Description = $_POST['product_Description'];
         $Quantity = $_POST['quantity'];
 
-        $insertSQL = "INSERT INTO products (product_ID, product_name, quantity) 
-        VALUES ('$Product_ID', '$ProductName', '$Quantity')";
+        $insertSQL = "INSERT INTO products (product_ID, product_name, product_description, quantity) 
+        VALUES ('$Product_ID', '$ProductName', '$Product_Description', '$Quantity')";
 
         if ($connection->query($insertSQL) === TRUE) {
             echo '
@@ -68,6 +72,33 @@
         }
     }
 
+    // SEARCH CUSTOMERS
+    if (isset($_POST['customers'])) {
+        // get values
+        $customer_ID = $_POST['customer_ID'];
+
+        // new query
+        $query = "SELECT * FROM customers WHERE customer_ID = $customer_ID";
+
+        $search_Result = mysqli_query($connection, $query);
+
+        if ($search_Result) {
+            if (mysqli_num_rows($search_Result)) {
+                while ($row = mysqli_fetch_array($search_Result)) {
+                    $customer_ID =  $row["customer_ID"];
+                    $Customer = $row["Customer_name"];
+                    $Address  = $row["Customer_address"];
+                    $Contact = $row["Mobile_number"];
+                }
+            } else {
+                echo 'No Data For This Id';
+            }
+        } else {
+            echo 'Result Error';
+        }
+    }
+
+    // SEARCH PRODUCT
     if (isset($_POST['Search'])) {
         // get values
         $Product_ID = $_POST['product_ID'];
@@ -82,6 +113,7 @@
                 while ($row = mysqli_fetch_array($search_Result)) {
                     $ProductID =  $row["product_ID"];
                     $ProductName = $row["product_name"];
+                    $Product_Description = $row["product_description"];
                     $Quantity = $row["quantity"];
                 }
             } else {
@@ -91,6 +123,7 @@
             echo 'Result Error';
         }
     }
+
     ?>
     <header class="nav justify-content-center bg-maroon p-3">
         <div class=" card-header">
@@ -160,12 +193,15 @@
                                     </div>
                                     <div class="modal-body">
                                         <form action="./mainForm.php" method="post">
+                                            <label for="customer_ID">ID</label>
+                                            <input type="text" name="customer_ID" id="customer_ID" class="form-control" required>
+                                            <br>
                                             <label for="name">Customer name</label>
                                             <input type="text" name="name" id="name" class="form-control" required>
-
+                                            <br>
                                             <label for="address">Address</label>
                                             <input type="text" name="address" id="address" class="form-control" required>
-
+                                            <br>
                                             <label for="mobileNumber">Mobile Number</label>
                                             <input type="text" name="mobileNumber" id="mobileNumber" class="form-control" required>
 
@@ -190,6 +226,19 @@
                         <!-- End of Modal -->
                     </div>
 
+                    <!-- SEARCH FUNCTION -->
+                    <div class="container">
+                        <div class="sub-container m-2 justify-content-between nav">
+                            <div class="invisible"></div>
+                            <div class="">
+                                <form action="./customers.php" method="POST" class="d-sm-inline-flex gap-3"> <!-- Ensure the form method is POST -->
+                                    <input type="text" name="customer_ID" class="form-control" placeholder="Search..." required>
+                                    <input type="submit" value="Search" name="customers" class="btn btn-primary">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END SEARCH FUNCTION -->
                     <!-- Start of table -->
                     <?php
                     require_once('config/connection.php');
@@ -205,7 +254,7 @@
                                     <th>Name</th>
                                     <th>Address</th>
                                     <th>Mobile No.</th>
-                                    <th>Actions</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -214,13 +263,12 @@
                                     while ($row = $result->fetch_assoc()) {
                                         echo "
                                         <tr>
-                                            <td>" . $row["ID"] . "</td>
+                                            <td>" . $row["customer_ID"] . "</td>
                                             <td>" . $row["Customer_name"] . "</td>
-                                            <td>" . $row["Address"] . "</td>
+                                            <td>" . $row["Customer_address"] . "</td>
                                             <td>" . $row["Mobile_number"] . "</td>
                                             <td>
-                                                <a href='' class='btn btn-success'>Update</a>
-                                               <a href='./delete.php?deleteID=" . $row["ID"] . "'class='btn btn-danger'>Delete</a>
+                                               <a href='./delete.php?deleteID=" . $row["customer_ID"] . "'class='btn btn-danger'>Delete</a>
                                             </td>
                                         </tr>
                                         ";
@@ -264,13 +312,16 @@
                                     <div class="modal-body">
                                         <form action="./mainForm.php" method="POST">
                                             <label for="product_ID">Product ID</label>
-                                            <input type="text" name="product_ID" id="product_ID" value="<?php echo $Product_ID; ?>" class="form-control" required>
-
+                                            <input type="text" name="product_ID" id="product_ID" class="form-control" required>
+                                            <br>
                                             <label for="product_Name">Product name</label>
-                                            <input type="text" name="product_Name" id="product_Name" value="<?php echo $ProductName; ?>" class="form-control" required>
-
+                                            <input type="text" name="product_Name" id="product_Name" class="form-control" required>
+                                            <br>
+                                            <label for="product_Description">Product description</label>
+                                            <input type="text" name="product_Description" id="product_Description" class="form-control" required>
+                                            <br>
                                             <label for="quantity">Quantity</label>
-                                            <input type="text" name="quantity" id="quantity" value="<?php echo $Quantity; ?>" class="form-control" required>
+                                            <input type="text" name="quantity" id="quantity" class="form-control" required>
 
                                             <input type="submit" value="Add Product" name="addProduct" class="btn btn-primary mt-2">
                                         </form>
@@ -299,8 +350,8 @@
                         <div class="sub-container m-2 justify-content-between nav">
                             <div class="invisible"></div>
                             <div class="">
-                                <form action="./mainForm.php" method="POST" class="d-sm-inline-flex gap-3"> <!-- Ensure the form method is POST -->
-                                    <input type="text" name="product_ID" class="form-control" placeholder="Search...">
+                                <form action="./search.php" method="POST" class="d-sm-inline-flex gap-3"> <!-- Ensure the form method is POST -->
+                                    <input type="text" name="product_ID" class="form-control" placeholder="Search..." required>
                                     <input type="submit" value="Search" name="Search" class="btn btn-primary">
                                 </form>
                             </div>
@@ -320,8 +371,9 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Product name</th>
+                                    <th>Product description</th>
                                     <th>Product quantity</th>
-                                    <th>Actions</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -332,9 +384,9 @@
                                         <tr>
                                             <td>" . $row["product_ID"] . "</td>
                                             <td>" . $row["product_name"] . "</td>
+                                            <td>" . $row["product_description"] . "</td>
                                             <td>" . $row["quantity"] . "</td>
                                             <td>
-                                                <a href='' class='btn btn-success'>Update</a>
                                                <a href='./delete_products.php?deleteID=" . $row["product_ID"] . "'class='btn btn-danger'>Delete</a>
                                             </td>
                                         </tr>
